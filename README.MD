@@ -23,4 +23,4 @@ This plugin is going to be the only "code-runner" you need.
 I was looking through so many different code-runner plugins which were either
 1. too complicated for my use cases (overseer.nvim, compiler.nvim, etc...)
 2. were not really os independant (path escaping etc.)
-3. where configured in the neovim config and not in the project itself
+3. were configured in the neovim config and not in the project itself
