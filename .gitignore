@@ -1,0 +1,66 @@
+### general ###
+# Windows ###
+Windows thumbnail cache files
+umbs.db
+umbs.db:encryptable
+thumbs.db
+thumbs_vista.db
+*.key
+*.secret
+*.env
+*.log
+Dump file
+stackdump
+
+Folder config file
+d]esktop.ini
+
+Recycle Bin used on file shares
+ECYCLE.BIN/
+
+Windows Installer files
+cab
+msi
+msix
+msm
+msp
+
+Windows shortcuts
+lnk
+*.zip
+*.tar.gz
+*.tmp
+# Object files
+*.o
+    *.os
+    *.ko
+    *.obj
+    *.elf
+    
+    # Precompiled Headers
+    *.gch
+    *.pch
+    
+    # Libraries
+    *.lib
+    *.a
+    *.la
+    *.lo
+    *.def
+    *.exp
+    
+    # Shared objects (inc. Windows DLLs)
+    *.dll
+    *.so
+    *.so.*
+    *.dylib
+    
+    # Executables
+    *.exe
+    *.out
+    *.app
+    *.i*86
+    *.x86_64
+    *.hex
+    
+    
