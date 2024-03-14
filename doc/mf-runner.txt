@@ -1,0 +1,57 @@
+TABLE OF CONTENTS                                              *mf-runner.nvim.toc*
+1.  Introduction               (|mf-runner.nvim|)
+2.  Installation              (|mf-runner-install|)
+3.  Configuration             (|mf-runner-config|)
+4.  Commands                  (|mf-runner-commands|)
+5.  Mappings                  (|mf-runner-mappings|)
+
+================================================================================
+1. INTRODUCTION                                                       *mf-runner.nvim*
+
+This plugin provides a streamlined interface for running targets from a Makefile in a few key strokes
+
+================================================================================
+2. INSTALLATION                                                 *mf-runner-install*
+
+To install 'mf-runner.nvim', you can use your preferred plugin manager.
+
+>
+    -- Lazy
+    {
+        "burgr033/mf-runner.nvim",
+        cmd = { "MFROpen", "MFRRun", "MFRCreate" },
+        dependencies = { "nvim-telescope/telescope.nvim", "akinsho/toggleterm.nvim" }
+        opts = {},
+    },
+
+    -- Packer
+    use {'burgr033/mf-runner.nvim', requires = { "nvim-telescope/telescope.nvim", "akinsho/toggleterm.nvim" }}
+<
+
+================================================================================
+3. CONFIGURATION                                               *mf-runner-config*
+
+no configuration needed. You need a Makefile in your current cwd.
+
+================================================================================
+4. COMMANDS                                                      *mf-runner-commands*
+MFROpen opens a telescope picker for the targets in the detected Makefile
+>
+    :MFROpen
+<
+
+MFRRun can be used to tab through specific Makefile targets without the use of telescope. If you use generic targets, you could use it for |mf-runner-mappings|
+>
+    :MFRRun <tab>
+<
+
+MFREdit not yet implemented, will be used to edit the detected Makefile. Or if none is detected will open a new Buffer for creating one.
+>
+    :MFREdit
+<
+================================================================================
+MAPPINGS                                                     *mf-runner-mappings*
+
+If you use generic build targets you could just map e.g. `vim.keymap.set('n', '<leader>mf', 'MFRRun build')`
+
+================================================================================
