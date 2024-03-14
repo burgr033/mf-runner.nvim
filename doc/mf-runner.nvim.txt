@@ -1,17 +1,20 @@
-TABLE OF CONTENTS                                              *mf-runner.nvim.toc*
-1.  Introduction               (|mf-runner.nvim|)
-2.  Installation              (|mf-runner-install|)
-3.  Configuration             (|mf-runner-config|)
-4.  Commands                  (|mf-runner-commands|)
-5.  Mappings                  (|mf-runner-mappings|)
+*mf-runner.nvim.txt*    {simple easy runner for makefiles}
 
 ================================================================================
-1. INTRODUCTION                                                       *mf-runner.nvim*
+TABLE OF CONTENTS                                            *mf-runner.nvim-toc*
+1.  Introduction              (|mf-runner.nvim-intro|)
+2.  Installation              (|mf-runner.nvim-install|)
+3.  Configuration             (|mf-runner.nvim-config|)
+4.  Commands                  (|mf-runner.nvim-commands|)
+5.  Mappings                  (|mf-runner.nvim-mappings|)
+
+================================================================================
+1. INTRODUCTION                                                       *mf-runner.nvim-intro*
 
 This plugin provides a streamlined interface for running targets from a Makefile in a few key strokes
 
 ================================================================================
-2. INSTALLATION                                                 *mf-runner-install*
+2. INSTALLATION                                                 *mf-runner.nvim-install*
 
 To install 'mf-runner.nvim', you can use your preferred plugin manager.
 
@@ -29,12 +32,12 @@ To install 'mf-runner.nvim', you can use your preferred plugin manager.
 <
 
 ================================================================================
-3. CONFIGURATION                                               *mf-runner-config*
+3. CONFIGURATION                                               *mf-runner.nvim-config*
 
 no configuration needed. You need a Makefile in your current cwd.
 
 ================================================================================
-4. COMMANDS                                                      *mf-runner-commands*
+4. COMMANDS                                                      *mf-runner.nvim-commands*
 MFROpen opens a telescope picker for the targets in the detected Makefile
 >
     :MFROpen
@@ -50,8 +53,9 @@ MFREdit not yet implemented, will be used to edit the detected Makefile. Or if n
     :MFREdit
 <
 ================================================================================
-MAPPINGS                                                     *mf-runner-mappings*
+5. MAPPINGS                                                     *mf-runner.nvim-mappings*
 
 If you use generic build targets you could just map e.g. `vim.keymap.set('n', '<leader>mf', 'MFRRun build')`
 
 ================================================================================
+vim:tw=80:ts=8:ft=help:norl:
