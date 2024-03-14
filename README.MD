@@ -1,22 +1,44 @@
 # mf-runner.nvim
-This plugin is going to be the only "code-runner" you need.
+`mf-runner.nvim` is a simple and easy runner for makefiles.
+
 ## Install
+
 ### Lazy
+
 ```lua
 {
-    "burgr033/mf-runner.nvim",
-    cmd = { "MFROpen", "MFRRun", "MFRCreate" },
-    dependencies = { "nvim-telescope/telescope.nvim", "akinsho/toggleterm.nvim" }
-    opts = {},
+        "burgr033/mf-runner.nvim",
+        cmd = { "MFROpen", "MFRRun", "MFREdit" },
+        dependencies = {
+            "nvim-telescope/telescope.nvim",
+            "akinsho/toggleterm.nvim"
+        },
+        opts = {},
 },
 
 ```
-## Usage
 
-* `:MFROpen` opens up the telescope picker.
-* `:MFRRun <TAB>` tab trough targets of current Makefile 
-* `:MFRCreate` create Makefile 
+## Configuration
 
+no configuration needed. You need a Makefile in your current cwd.
+
+## Commands
+
+* `:MFROpen` opens a telescope picker for the targets in the detected Makefile
+
+* `:MFRRun` can be used to tab through specific Makefile targets without the use of
+telescope. If you use generic targets, you could use it for |mf-runner-mappings|
+
+* `MFREdit` not yet implemented, will be used to edit the detected Makefile.
+Or if none is detected will open a new Buffer for creating one.
+
+## Mappings
+
+If you use generic build targets you could just map e.g.
+
+```lua
+vim.keymap.set('n', '<leader>mf', 'MFRRun build')
+```
 
 ## Motivation
 

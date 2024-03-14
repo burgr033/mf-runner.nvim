@@ -1,6 +1,5 @@
 *mf-runner.nvim.txt*    {simple easy runner for makefiles}
 
-================================================================================
 TABLE OF CONTENTS                                            *mf-runner.nvim-toc*
 1.  Introduction              (|mf-runner.nvim-intro|)
 2.  Installation              (|mf-runner.nvim-install|)
@@ -9,53 +8,60 @@ TABLE OF CONTENTS                                            *mf-runner.nvim-toc
 5.  Mappings                  (|mf-runner.nvim-mappings|)
 
 ================================================================================
-1. INTRODUCTION                                                       *mf-runner.nvim-intro*
+1. INTRODUCTION                                           *mf-runner.nvim-intro*
 
-This plugin provides a streamlined interface for running targets from a Makefile in a few key strokes
+This plugin provides a streamlined interface, for running targets from a
+Makefile in a few key strokes.
 
 ================================================================================
-2. INSTALLATION                                                 *mf-runner.nvim-install*
+2. INSTALLATION                                         *mf-runner.nvim-install*
 
 To install 'mf-runner.nvim', you can use your preferred plugin manager.
 
->
+>lua
     -- Lazy
     {
         "burgr033/mf-runner.nvim",
-        cmd = { "MFROpen", "MFRRun", "MFRCreate" },
-        dependencies = { "nvim-telescope/telescope.nvim", "akinsho/toggleterm.nvim" }
+        cmd = { "MFROpen", "MFRRun", "MFREdit" },
+        dependencies = {
+            "nvim-telescope/telescope.nvim",
+            "akinsho/toggleterm.nvim"
+        },
         opts = {},
-    },
-
-    -- Packer
-    use {'burgr033/mf-runner.nvim', requires = { "nvim-telescope/telescope.nvim", "akinsho/toggleterm.nvim" }}
+    }
 <
 
 ================================================================================
-3. CONFIGURATION                                               *mf-runner.nvim-config*
+3. CONFIGURATION                                          *mf-runner.nvim-config*
 
 no configuration needed. You need a Makefile in your current cwd.
 
 ================================================================================
-4. COMMANDS                                                      *mf-runner.nvim-commands*
+4. COMMANDS                                             *mf-runner.nvim-commands*
 MFROpen opens a telescope picker for the targets in the detected Makefile
 >
     :MFROpen
 <
+------------------------------------------------------------------------------
 
-MFRRun can be used to tab through specific Makefile targets without the use of telescope. If you use generic targets, you could use it for |mf-runner-mappings|
+MFRRun can be used to tab through specific Makefile targets without the use of
+telescope. If you use generic targets, you could use it for |mf-runner-mappings|
 >
     :MFRRun <tab>
 <
+------------------------------------------------------------------------------
 
-MFREdit not yet implemented, will be used to edit the detected Makefile. Or if none is detected will open a new Buffer for creating one.
+MFREdit, is used to edit the detected Makefile.
+Or if none is detected will open a new Buffer for creating one.
 >
     :MFREdit
 <
 ================================================================================
-5. MAPPINGS                                                     *mf-runner.nvim-mappings*
+5. MAPPINGS                                              *mf-runner.nvim-mappings*
 
-If you use generic build targets you could just map e.g. `vim.keymap.set('n', '<leader>mf', 'MFRRun build')`
+If you use generic build targets you could just map e.g.
+
+`vim.keymap.set('n', '<leader>mf', 'MFRRun build')`
 
 ================================================================================
 vim:tw=80:ts=8:ft=help:norl:
