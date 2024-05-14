@@ -31,6 +31,9 @@ To install 'mf-runner.nvim', you can use your preferred plugin manager.
     }
 <
 
+(toggleterm.nvim is not required per se. If you don't want to use it, leave it
+out of the dependencies)
+
 ================================================================================
 3. CONFIGURATION                                          *mf-runner.nvim-config*
 
