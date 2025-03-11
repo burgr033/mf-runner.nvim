@@ -1,10 +1,12 @@
 local utils = require "mf-runner.utils"
 local cmd = vim.api.nvim_create_user_command
 local M = {}
-local telescopeAvailable = pcall(require, "telescope")
+local snacks_available, _ = pcall(require, "snacks")
+
+--- setup function
 M.setup = function()
-  if telescopeAvailable then
-    cmd("MFROpen", function() require("mf-runner.telescope").show() end, { desc = "Open mf-runner" })
+  if snacks_available then
+    cmd("MFROpen", function() require("mf-runner.picker").open_picker() end, { desc = "Open mf-runner" })
   end
   cmd(
     "MFREdit",
@@ -14,10 +16,7 @@ M.setup = function()
   cmd("MFRRun", function(tbl) require("mf-runner.backend").run_makefile(tbl.args) end, {
     desc = "Run Makefile",
     nargs = 1,
-    complete = function()
-      local options = utils.parseMakefile()
-      return options
-    end,
+    complete = function() return utils.parseMakefile() or {} end,
   })
 end
 

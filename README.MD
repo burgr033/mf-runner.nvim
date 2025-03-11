@@ -10,8 +10,7 @@
         "burgr033/mf-runner.nvim",
         cmd = { "MFROpen", "MFRRun", "MFREdit" },
         dependencies = {
-            "nvim-telescope/telescope.nvim",
-            "akinsho/toggleterm.nvim"
+            "folke/snacks.nvim",
         },
         opts = {},
 },
@@ -24,13 +23,12 @@ no configuration needed. You need a Makefile in your current cwd.
 
 ## Commands
 
-* `:MFROpen` opens a telescope picker for the targets in the detected Makefile
+* `:MFROpen` opens a snacks picker for the targets in the detected Makefile
 
 * `:MFRRun` can be used to tab through specific Makefile targets without the use of
-telescope. If you use generic targets, you could use it for |mf-runner-mappings|
+snacks picker. If you use generic targets, you could use it for |mf-runner-mappings|
 
-* `MFREdit` not yet implemented, will be used to edit the detected Makefile.
-Or if none is detected will open a new Buffer for creating one.
+* `MFREdit` opens a Makefile in a new buffer or if none is detected will open a new Buffer for creating one.
 
 ## Mappings
 

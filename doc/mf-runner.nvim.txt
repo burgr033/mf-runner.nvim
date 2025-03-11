@@ -24,14 +24,13 @@ To install 'mf-runner.nvim', you can use your preferred plugin manager.
         "burgr033/mf-runner.nvim",
         cmd = { "MFROpen", "MFRRun", "MFREdit" },
         dependencies = {
-            "nvim-telescope/telescope.nvim",
-            "akinsho/toggleterm.nvim"
+            "folke/snacks.nvim"
         },
         opts = {},
     }
 <
 
-(toggleterm.nvim is not required per se. If you don't want to use it, leave it
+(snacks.nvim is not required per se. If you don't want to use it, leave it
 out of the dependencies)
 
 ================================================================================
@@ -41,14 +40,14 @@ no configuration needed. You need a Makefile in your current cwd.
 
 ================================================================================
 4. COMMANDS                                             *mf-runner.nvim-commands*
-MFROpen opens a telescope picker for the targets in the detected Makefile
+MFROpen opens a snacks picker for the targets in the detected Makefile
 >
     :MFROpen
 <
 ------------------------------------------------------------------------------
 
 MFRRun can be used to tab through specific Makefile targets without the use of
-telescope. If you use generic targets, you could use it for |mf-runner-mappings|
+snacks picker. If you use generic targets, you could use it for |mf-runner-mappings|
 >
     :MFRRun <tab>
 <
