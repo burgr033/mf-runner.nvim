@@ -31,18 +31,99 @@ function M.run_makefile(chosen_target)
   local command = "make " .. chosen_target
   vim.notify("Running " .. command, vim.log.levels.INFO)
 
-  local handle, err = io.popen(command .. " 2>&1") -- Capture stdout and stderr
-  if not handle then
-    vim.notify("Failed to run command: " .. (err or "unknown error"), vim.log.levels.ERROR)
+  local snacks_available, Snacks = pcall(require, "snacks")
+  if not snacks_available then
+    vim.notify("Snacks.nvim is not installed", vim.log.levels.ERROR)
     return
   end
 
-  local result = handle:read "*a"
-  local _, _, exit_code = handle:close()
+  -- Create buffer and window first
+  local win = Snacks.win {
+    text = { "Starting " .. command .. "..." },
+    width = 0.8,
+    height = 0.8,
+    wo = {
+      spell = false,
+      wrap = false,
+      signcolumn = "no",
+      statuscolumn = " ",
+      conceallevel = 3,
+    },
+  }
 
-  show_in_snacks_window(result)
+  local buf = win.buf
+  local output_lines = {}
 
-  if exit_code and exit_code ~= 0 then vim.notify("Command exited with code: " .. exit_code, vim.log.levels.WARN) end
+  -- Run make command asynchronously
+  local jobid = vim.fn.jobstart(command, {
+    on_stdout = function(_, data)
+      if data then
+        for _, line in ipairs(data) do
+          if line ~= "" then
+            table.insert(output_lines, line)
+            -- Update buffer with new output
+            vim.schedule(function()
+              if vim.api.nvim_buf_is_valid(buf) then
+                vim.api.nvim_buf_set_lines(buf, 0, -1, false, output_lines)
+                -- Scroll to bottom if buffer is visible
+                if vim.api.nvim_win_is_valid(win.win) then
+                  vim.api.nvim_win_set_cursor(win.win, { #output_lines, 0 })
+                end
+              end
+            end)
+          end
+        end
+      end
+    end,
+    on_stderr = function(_, data)
+      if data then
+        for _, line in ipairs(data) do
+          if line ~= "" then
+            table.insert(output_lines, line)
+            -- Update buffer with new output
+            vim.schedule(function()
+              if vim.api.nvim_buf_is_valid(buf) then
+                vim.api.nvim_buf_set_lines(buf, 0, -1, false, output_lines)
+                -- Scroll to bottom if buffer is visible
+                if vim.api.nvim_win_is_valid(win.win) then
+                  vim.api.nvim_win_set_cursor(win.win, { #output_lines, 0 })
+                end
+              end
+            end)
+          end
+        end
+      end
+    end,
+    on_exit = function(_, exit_code)
+      vim.schedule(function()
+        table.insert(output_lines, "")
+        table.insert(output_lines, "Process exited with code: " .. exit_code)
+        if vim.api.nvim_buf_is_valid(buf) then vim.api.nvim_buf_set_lines(buf, 0, -1, false, output_lines) end
+
+        local status = exit_code == 0 and "completed successfully" or "failed"
+        vim.notify(
+          "Command " .. status .. " (exit code: " .. exit_code .. ")",
+          exit_code == 0 and vim.log.levels.INFO or vim.log.levels.ERROR
+        )
+      end)
+    end,
+    stdout_buffered = false,
+    stderr_buffered = false,
+  })
+
+  if jobid <= 0 then
+    vim.notify("Failed to start job", vim.log.levels.ERROR)
+    return
+  end
+
+  -- Add keybinding to cancel the job
+  vim.api.nvim_buf_set_keymap(
+    buf,
+    "n",
+    "q",
+    "<cmd>lua vim.fn.jobstop(" .. jobid .. ")<CR><cmd>close<CR>",
+    { noremap = true, silent = true, desc = "Stop job and close window" }
+  )
 end
 
 --- Edit the Makefile.
