@@ -1,11 +1,17 @@
 local M = {}
 
---- open the snacks picker
+--- Opens a picker UI to select a Makefile target
+---@return nil
 function M.open_picker()
   local snacks_available, Snacks = pcall(require, "snacks")
-  local targets = require("mf-runner.utils").parseMakefile()
   if not snacks_available then
     vim.notify("Snacks.nvim is not installed", vim.log.levels.ERROR)
+    return
+  end
+
+  local targets = require("mf-runner.utils").parseMakefile()
+  if #targets == 0 then
+    vim.notify("No targets found in Makefile", vim.log.levels.INFO)
     return
   end
 
