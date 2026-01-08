@@ -1,6 +1,6 @@
 local M = {}
 
---- Opens a picker UI to select a Makefile target
+--- Opens a picker UI to select a build target (Makefile or justfile)
 ---@return nil
 function M.open_picker()
   local snacks_available, Snacks = pcall(require, "snacks")
@@ -9,17 +9,21 @@ function M.open_picker()
     return
   end
 
-  local targets = require("mf-runner.utils").parseMakefile()
+  local utils = require "mf-runner.utils"
+  local targets, file_type = utils.parse_build_file()
+
   if #targets == 0 then
-    vim.notify("No targets found in Makefile", vim.log.levels.INFO)
+    vim.notify("No targets found in build file", vim.log.levels.INFO)
     return
   end
 
+  local prompt_text = file_type == "makefile" and "Makefile target" or "justfile recipe"
+
   Snacks.picker.select(targets, {
-    prompt = "Makefile target",
-    format_item = function(item) return "🔹 " .. item end, -- Customize display
+    prompt = prompt_text,
+    format_item = function(item) return "🔹 " .. item end,
   }, function(selected_item, _)
-    if selected_item then require("mf-runner.backend").run_makefile(selected_item) end
+    if selected_item then require("mf-runner.backend").run_build_target(selected_item) end
   end)
 end
 

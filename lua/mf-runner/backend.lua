@@ -1,34 +1,29 @@
 local M = {}
 
---- Display command output in a Snacks window
----@param output string The command output text
+--- Run the specified build target and show output in Snacks window.
+---@param chosen_target string The target to run.
 ---@return nil
-local function show_in_snacks_window(output)
-  local snacks_available, Snacks = pcall(require, "snacks")
-  if not snacks_available then
-    vim.notify("Snacks.nvim is not installed", vim.log.levels.ERROR)
+function M.run_build_target(chosen_target)
+  local utils = require "mf-runner.utils"
+  local file_type, err = utils.detect_build_file()
+
+  if err then
+    vim.notify(err, vim.log.levels.ERROR)
     return
   end
 
-  Snacks.win {
-    text = vim.split(output, "\n"),
-    width = 0.8,
-    height = 0.8,
-    wo = {
-      spell = false,
-      wrap = false,
-      signcolumn = "no",
-      statuscolumn = " ",
-      conceallevel = 3,
-    },
-  }
-end
+  if not file_type then
+    vim.notify("No build file found", vim.log.levels.ERROR)
+    return
+  end
 
---- Run the specified Makefile target and show output in Snacks window.
----@param chosen_target string The target to run.
----@return nil
-function M.run_makefile(chosen_target)
-  local command = "make " .. chosen_target
+  local command
+  if file_type == "makefile" then
+    command = "make " .. chosen_target
+  elseif file_type == "justfile" then
+    command = "just " .. chosen_target
+  end
+
   vim.notify("Running " .. command, vim.log.levels.INFO)
 
   local snacks_available, Snacks = pcall(require, "snacks")
@@ -54,7 +49,7 @@ function M.run_makefile(chosen_target)
   local buf = win.buf
   local output_lines = {}
 
-  -- Run make command asynchronously
+  -- Run command asynchronously
   local jobid = vim.fn.jobstart(command, {
     on_stdout = function(_, data)
       if data then
@@ -126,20 +121,51 @@ function M.run_makefile(chosen_target)
   )
 end
 
---- Edit the Makefile.
--- Opens the Makefile for editing if it exists, otherwise creates a new one.
+--- Backward compatibility: Run makefile target
+---@param chosen_target string The target to run.
 ---@return nil
-function M.edit_makefile()
-  local utils = require "mf-runner.utils"
-  local filepath = utils.get_makefile_path()
+function M.run_makefile(chosen_target) M.run_build_target(chosen_target) end
 
-  if vim.fn.filereadable(filepath) == 1 then
+--- Edit the build file (Makefile or justfile).
+-- Opens the file for editing if it exists, otherwise creates a new one.
+---@return nil
+function M.edit_build_file()
+  local utils = require "mf-runner.utils"
+  local file_type, err = utils.detect_build_file()
+
+  -- If both files exist, show error
+  if err then
+    vim.notify(err, vim.log.levels.ERROR)
+    return
+  end
+
+  -- If a file exists, open it
+  if file_type == "makefile" then
     vim.cmd.edit "Makefile"
     vim.notify("Editing existing Makefile", vim.log.levels.INFO)
-  else
-    vim.cmd.edit "Makefile"
-    vim.notify("Creating new Makefile", vim.log.levels.INFO)
+    return
+  elseif file_type == "justfile" then
+    vim.cmd.edit "justfile"
+    vim.notify("Editing existing justfile", vim.log.levels.INFO)
+    return
   end
+
+  -- No file exists, prompt user to choose
+  vim.ui.select({ "Makefile", "justfile" }, {
+    prompt = "No build file found. Create:",
+  }, function(choice)
+    if choice == "Makefile" then
+      vim.cmd.edit "Makefile"
+      vim.notify("Creating new Makefile", vim.log.levels.INFO)
+    elseif choice == "justfile" then
+      vim.cmd.edit "justfile"
+      vim.notify("Creating new justfile", vim.log.levels.INFO)
+    end
+  end)
 end
+
+--- Backward compatibility: Edit makefile
+---@return nil
+function M.edit_makefile() M.edit_build_file() end
 
 return M
