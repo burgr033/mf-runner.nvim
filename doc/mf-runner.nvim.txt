@@ -1,23 +1,28 @@
-*mf-runner.nvim.txt*    {simple easy runner for makefiles}
+*mf-runner.nvim.txt*    {simple easy runner for makefiles and justfiles}
 
 TABLE OF CONTENTS                                            *mf-runner.nvim-toc*
+
 1.  Introduction              (|mf-runner.nvim-intro|)
 2.  Installation              (|mf-runner.nvim-install|)
-3.  Configuration             (|mf-runner.nvim-config|)
-4.  Commands                  (|mf-runner.nvim-commands|)
-5.  Mappings                  (|mf-runner.nvim-mappings|)
+3.  Requirements              (|mf-runner.nvim-requirements|)
+4.  Configuration             (|mf-runner.nvim-config|)
+5.  Commands                  (|mf-runner.nvim-commands|)
+6.  Mappings                  (|mf-runner.nvim-mappings|)
+7.  Health Check              (|mf-runner.nvim-health|)
 
 ================================================================================
 1. INTRODUCTION                                           *mf-runner.nvim-intro*
 
-This plugin provides a streamlined interface, for running targets from a
-Makefile in a few key strokes.
+This plugin provides a streamlined interface for running targets from a
+Makefile or recipes from a justfile in a few key strokes.
+
+The plugin automatically detects which build file is present in your current
+working directory and uses the appropriate tool (`make` or `just`).
 
 ================================================================================
 2. INSTALLATION                                         *mf-runner.nvim-install*
 
 To install 'mf-runner.nvim', you can use your preferred plugin manager.
-
 >lua
     -- Lazy
     {
@@ -29,41 +34,109 @@ To install 'mf-runner.nvim', you can use your preferred plugin manager.
         opts = {},
     }
 <
-
 (snacks.nvim is not required per se. If you don't want to use it, leave it
-out of the dependencies)
+out of the dependencies. However, without it, the |MFROpen| command will not
+be available.)
 
 ================================================================================
-3. CONFIGURATION                                          *mf-runner.nvim-config*
+3. REQUIREMENTS                                     *mf-runner.nvim-requirements*
 
-no configuration needed. You need a Makefile in your current cwd.
+At least one of the following command-line tools must be installed:
+- `make` - for running Makefiles
+- `just` - for running justfiles
+
+Optional:
+- snacks.nvim - required for the picker UI (|MFROpen| command)
+
+To check if your system meets the requirements, run: >
+    :checkhealth mf-runner
+<
+================================================================================
+4. CONFIGURATION                                          *mf-runner.nvim-config*
+
+No configuration needed. You need either a Makefile or justfile in your
+current working directory.
+
+Important: The plugin will throw an error if both Makefile and justfile exist
+in the same directory. Keep only one build file per project.
 
 ================================================================================
-4. COMMANDS                                             *mf-runner.nvim-commands*
-MFROpen opens a snacks picker for the targets in the detected Makefile
->
-    :MFROpen
+5. COMMANDS                                             *mf-runner.nvim-commands*
+
+                                                                      *:MFROpen*
+:MFROpen
+    Opens a snacks picker for the targets in the detected build file
+    (Makefile or justfile). Requires snacks.nvim to be installed.
+    
+    The picker will display:
+    - "Makefile target" if a Makefile is detected
+    - "justfile recipe" if a justfile is detected
+    
+    Example: >
+        :MFROpen
 <
 ------------------------------------------------------------------------------
-
-MFRRun can be used to tab through specific Makefile targets without the use of
-snacks picker. If you use generic targets, you could use it for |mf-runner-mappings|
->
-    :MFRRun <tab>
+                                                                       *:MFRRun*
+:MFRRun {target}
+    Run a specific target/recipe from the detected build file without using
+    the picker. Supports tab completion for available targets.
+    
+    If you use generic targets, you could use this for keymappings
+    (see |mf-runner.nvim-mappings|).
+    
+    Example: >
+        :MFRRun build
+        :MFRRun test
+        :MFRRun <tab>
 <
 ------------------------------------------------------------------------------
-
-MFREdit, is used to edit the detected Makefile.
-Or if none is detected will open a new Buffer for creating one.
->
-    :MFREdit
+                                                                      *:MFREdit*
+:MFREdit
+    Edit the detected build file (Makefile or justfile).
+    
+    Behavior:
+    - If a build file exists, it will be opened for editing
+    - If no build file exists, you'll be prompted to choose between
+      creating a Makefile or justfile
+    - If both files exist, an error will be shown
+    
+    Example: >
+        :MFREdit
 <
 ================================================================================
-5. MAPPINGS                                              *mf-runner.nvim-mappings*
+6. MAPPINGS                                              *mf-runner.nvim-mappings*
 
-If you use generic build targets you could just map e.g.
+The plugin does not set any default keymappings. Here are some suggested
+mappings you can add to your configuration:
 
-`vim.keymap.set('n', '<leader>mf', 'MFRRun build')`
+For opening the picker: >lua
+    vim.keymap.set('n', '<leader>mo', '<cmd>MFROpen<cr>', 
+      { desc = 'Open build target picker' })
+<
+For editing the build file: >lua
+    vim.keymap.set('n', '<leader>me', '<cmd>MFREdit<cr>', 
+      { desc = 'Edit build file' })
+<
+For running specific targets (if you use generic build targets): >lua
+    vim.keymap.set('n', '<leader>mb', '<cmd>MFRRun build<cr>', 
+      { desc = 'Run build target' })
+    vim.keymap.set('n', '<leader>mt', '<cmd>MFRRun test<cr>', 
+      { desc = 'Run test target' })
+    vim.keymap.set('n', '<leader>mc', '<cmd>MFRRun clean<cr>', 
+      { desc = 'Run clean target' })
+<
+================================================================================
+7. HEALTH CHECK                                           *mf-runner.nvim-health*
+
+The plugin includes a health check to verify your setup. Run: >
+    :checkhealth mf-runner
+<
+The health check verifies:
+- Whether `make` command is available
+- Whether `just` command is available
+- Whether snacks.nvim is installed (optional dependency)
+
+At least one of `make` or `just` must be available for the plugin to work.
 
 ================================================================================
 vim:tw=80:ts=8:ft=help:norl:

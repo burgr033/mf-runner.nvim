@@ -1,5 +1,5 @@
 # mf-runner.nvim
-`mf-runner.nvim` is a simple and easy runner for makefiles.
+`mf-runner.nvim` is a simple and easy runner for makefiles or justfiles
 
 ## Install
 
@@ -18,7 +18,7 @@
 
 ## Configuration
 
-No configuration needed. You just need a Makefile in your current working directory.
+No configuration needed. You just need a Makefile or justfile in your current working directory.
 
 ## Commands
 
